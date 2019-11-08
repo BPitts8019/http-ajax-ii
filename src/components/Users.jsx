@@ -18,15 +18,23 @@ function Users(props) {
    const handleDelete = (event, id) => {
       event.preventDefault();
 
-      api()
-         .delete(`/users/${id}`)
-         .then(response => {
-            console.log("User was deleted");
-            setUsers(users.filter(user => user.id !== id));
-         })
-         .catch(err => {
-            console.log(err.response);
-         })
+      //optimistic update
+      if (window.confirm("Are you sure you want to delete this user?")) {
+         const user = users.find(user => user.id === id);
+         setUsers(users.filter(user => user.id !== id));
+   
+         api()
+            .delete(`/users/${id}`)
+            .then(response => {
+               console.log("User was deleted");
+            })
+            .catch(err => {
+               console.log(err.response);
+               
+               //put the deleted user back on an error
+               setUsers([...users, user]);
+            })
+      }
    };
    
 	return (
