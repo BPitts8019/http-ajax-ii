@@ -29,7 +29,15 @@ function UserUpdate (props) {
 
    const handleSubmit = event => {
       event.preventDefault();
-      console.log(user);
+      
+      api()
+         .put(`/users/${user.id}`, user)
+         .then(response => {
+            props.history.push("/users");
+         })
+         .catch(err => {
+            console.log(err.response);
+         })
    };
 
    return (
