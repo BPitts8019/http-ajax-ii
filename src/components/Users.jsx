@@ -15,6 +15,20 @@ function Users(props) {
 			})
 	}, [])
 
+   const handleDelete = (event, id) => {
+      event.preventDefault();
+
+      api()
+         .delete(`/users/${id}`)
+         .then(response => {
+            console.log("User was deleted");
+            setUsers(users.filter(user => user.id !== id));
+         })
+         .catch(err => {
+            console.log(err.response);
+         })
+   };
+   
 	return (
 		<>
 			<h1>My Account</h1>
@@ -22,6 +36,10 @@ function Users(props) {
          {users.map(user => (
             <div key={user.id} className="account">
                <Link className="account-update" to={`/users/${user.id}`}>Edit</Link>
+               <button className="account-delete" onClick={e => {
+                  handleDelete(e, user.id);
+               }}>Delete</button>
+
                <div className="account-row">Name: {user.name}</div>
                <div className="account-row">Email: {user.email}</div>
             </div>
